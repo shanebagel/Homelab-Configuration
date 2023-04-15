@@ -1,0 +1,238 @@
+Hyper-V Dual Adapter Homelab Network Configuration:
+
+Domain: Shane.local
+
+Firewalls must be disabled in guest OS of VMs or networking will not work properly
+
+VMs:
+
+Server	Hostname	IP Address
+Windows Server 2019	ShaneServer	192.168.1.100
+Windows Server 2 2019	ShaneServer2	192.168.1.101
+Windows 10 Pro Client	ShaneClient	192.168.1.102
+Linux VM 1	ShaneLinux	192.168.1.103
+Linux VM 2	ShaneLinux2	192.168.1.104
+FreeNAS	ShaneNAS	192.168.1.105
+
+Host:
+
+Static Switch is for internal communication - VM>VM: All Addresses are Static in Guest OS
+
+Default Switch is for external communication VM>WAN: All Addresses are Dynamic in Guest OS
+
+Host Config	Type	IP	Configuration
+"Static Switch"	Internal	192.168.1.10	New-NetIPAddress -InterfaceAlias "vEthernet (Static Switch)" -IPAddress 192.168.1.10 -PrefixLength "24"
+"Default Switch"	Default	N/A	N/A - Address is Dynamic and changes with reboots
+
+Azure AD Connect:
+
+Azure AD Connect is running on ShaneServer. 
+
+Credentials: ShaneAdmin@Shane-Hartley.com
+
+Server 1:
+
+Configuration
+1. # Set DNS to Host Adapter IP
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "192.168.1.10"
+
+2. # Set Static IP, and Gateway to Host Adapter IP
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.10
+
+3. # Disable Firewall
+Set-NetFirewallProfile -Enabled False
+
+4. # Disable IPv6
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+
+5. # Setting Hostname
+Rename-Computer -NewName "ShaneServer"
+Reboot-Computer
+
+6. # Update PowerShell Help
+Update-Help
+
+7. # Install ADDS and Management tools
+Install-WindowsFeature -name AD-Domain-Services -IncludeManagementTools
+
+8. # Test the configuration before installing the forest
+Test-ADDSForestInstallation -DomainName shane.local -InstallDns
+
+9. # Creating a new AD Forest with domain name Shane.local
+Install-ADDSForest -DomainName shane.local -InstallDNS
+
+10. # After reboot, check that AD is installed and Domain is configured
+Get-ADDomainController
+
+11. # Install PowerShell Version 7
+Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
+
+12. # Install NuGet Package manager, prerequisite for installing modules
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+$Modules = @( 
+"Az", 
+"AzureAD", 
+"MicrosoftTeams", 
+"ExchangeOnlineManagement", 
+"Microsoft.Online.SharePoint.PowerShell", 
+"SharePointPnPPowerShellOnline", 
+"Microsoft.Graph", 
+"MSOnline" 
+)
+
+13. # Installing Modules
+Install-Module -Name $Modules -Force
+
+14. # Update hosts file with IP addresses of other servers:
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.100`tshaneserver.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.101`tshaneserver2.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.102`tshaneclient.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.103`tshanelinux" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.104`tshanelinux2" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.105`tshanenas" -Force
+
+15. # Disable IE Enhanced Security 
+function Disable-InternetExplorerESC {
+      $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+      $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+      Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0 -Force
+      Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0 -Force
+      Rundll32 iesetup.dll, IEHardenLMSettings
+      Rundll32 iesetup.dll, IEHardenUser
+      Rundll32 iesetup.dll, IEHardenAdmin
+      Write-Host "IE Enhanced Security Configuration (ESC) has been disabled."
+ }
+Disable-InternetExplorerEsc
+
+16. # Setting Time Zone
+Set-TimeZone -Name "Eastern Standard Time"
+
+Server 2:
+
+Configuration
+1. # Set DNS to Server 1
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "192.168.1.100"
+
+2. # Set Static IP, and Gateway to Host Adapter IP
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.101 -PrefixLength "24" -DefaultGateway 192.168.1.10
+
+3. # Disable firewall
+Set-NetFirewallProfile -Enabled False
+
+4. # Disable IPv6
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+
+5. # Setting Hostname
+Rename-Computer -NewName "ShaneServer2"
+Reboot-Computer
+
+6. # Update PowerShell Help
+Update-Help
+
+7. # Install ADDS and Management tools
+Install-WindowsFeature -name AD-Domain-Services -IncludeManagementTools
+
+8. # Join Server 2 to Domain
+Install-ADDSDomainController -DomainName "shane.local" -Credential (Get-Credential "Shane\Administrator")
+
+9. # Install PowerShell Version 7
+Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
+
+10. # Install NuGet Package manager, prerequisite for installing modules
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+$Modules = @( 
+"Az", 
+"AzureAD", 
+"MicrosoftTeams", 
+"ExchangeOnlineManagement", 
+"Microsoft.Online.SharePoint.PowerShell", 
+"SharePointPnPPowerShellOnline", 
+"Microsoft.Graph", 
+"MSOnline" 
+)
+
+11. # Installing Modules
+Install-Module -Name $Modules -Force
+
+12. # Update hosts file with IP addresses of other servers:
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.100`tshaneserver.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.101`tshaneserver2.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.102`tshaneclient.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.103`tshanelinux" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.104`tshanelinux2" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.105`tshanenas" -Force
+
+13. # Disable IE Enhanced Security 
+function Disable-InternetExplorerESC {
+      $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+      $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+      Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0 -Force
+      Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0 -Force
+      Rundll32 iesetup.dll, IEHardenLMSettings
+      Rundll32 iesetup.dll, IEHardenUser
+      Rundll32 iesetup.dll, IEHardenAdmin
+      Write-Host "IE Enhanced Security Configuration (ESC) has been disabled."
+ }
+Disable-InternetExplorerEsc
+
+14. # Setting Time Zone
+Set-TimeZone -Name "Eastern Standard Time"
+
+Client:
+
+Configuration
+1. # Set DNS to Server 1
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "192.168.1.100"
+
+2. # Set Static IP, and Gateway to Host Adapter IP
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.102 -PrefixLength "24" -DefaultGateway 192.168.1.10
+
+3. # Disable firewall
+Set-NetFirewallProfile -Enabled False
+
+4. # Disable IPv6
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+
+5. # Update PowerShell Help
+Update-Help
+
+6. # Install PowerShell Version 7
+Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
+
+7. # Install NuGet Package manager, prerequisite for installing modules
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+$Modules = @( 
+"Az", 
+"AzureAD", 
+"MicrosoftTeams", 
+"ExchangeOnlineManagement", 
+"Microsoft.Online.SharePoint.PowerShell", 
+"SharePointPnPPowerShellOnline", 
+"Microsoft.Graph", 
+"MSOnline" 
+)
+
+8. # Installing Modules
+Install-Module -Name $Modules -Force
+
+9. # Update hosts file with IP addresses of other servers:
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.100`tshaneserver.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.101`tshaneserver2.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.102`tshaneclient.shane.local" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.103`tshanelinux" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.104`tshanelinux2" -Force
+Add-Content -Path $env:windir\System32\drivers\etc\hosts -Value "`n192.168.1.105`tshanenas" -Force
+
+10. # Setting Hostname
+Rename-Computer -NewName "ShaneClient"
+Reboot-Computer
+
+11. # Setting Time Zone
+Set-TimeZone -Name "Eastern Standard Time"
+
+12. # Join the Client to the DC
+Add-Computer -DomainCredential administrator -Server "Shaneserver" -DomainName "Shane.local"
+Restart-Computer
