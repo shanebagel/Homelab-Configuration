@@ -108,6 +108,17 @@ Disable-InternetExplorerEsc
 16. # Setting Time Zone
 Set-TimeZone -Name "Eastern Standard Time"
 
+17. # Configuring and Mapping Network share
+Set-Location C:\
+New-Item -Type Directory -Name ShaneShare
+New-SmbShare -Path C:\ShaneShare -Name "ShaneShare"
+
+# Creating a PS Session variable
+$session = New-PSSession -ComputerName "shaneclient" -Credential(Get-Credential)
+
+# Creating a mapping of shared drive on Shaneclient to move files between server and client
+Invoke-command -Session $session -ScriptBlock {New-PSDrive -Name "S" -PSProvider "FileSystem" -Root "\\ShaneServer\Shaneshare"}
+
 Server 2:
 
 Configuration
