@@ -1,0 +1,26 @@
+Firewall:
+
+Configuration
+1. Connect Hyper-V Default Switch
+
+2. Configure WAN Interface for Default Switch: DHCP
+WAN (VM -> WAN)
+
+3. Connect Hyper-V Static Switch
+
+4. Configure LAN Interface for Static Switch: Static IP
+LAN (VM -> VM)
+IP: 192.168.1.105
+Subnet: 255.255.255.0 
+Gateway: 192.168.1.10 
+
+Web Interface for pfSense Firewall
+https://192.168.1.105
+
+Hostname: ShaneFirewall
+Domain: Shane.Local
+Primary DNS Server: 192.168.1.100 (ShaneServer)
+Time Server Hostname: 0.us.pool.ntp.org
+Timezone: US/Eastern
+
+Admin WebGUI Username/Password: See Bitwarden
