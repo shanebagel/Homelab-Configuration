@@ -1,0 +1,13 @@
+Linux Server:
+
+Configuration
+1. # Keep man pages on screen after closing 
+cd ~
+sudo echo ' export LESS="-X"' >> ~/.bashrc 
+exec bash 
+
+2. # Set Static IP on Internal Network Adapter using NMCLI - Pointing at ShaneServer for DNS
+Sudo Nmcli connection add type ethernet ifname eth1 ip4 192.168.1.103/24 gw4 192.168.1.10 ipv4.dns 192.168.1.100
+
+3. # Update system 
+Sudo yum update && yum upgrade
