@@ -7,13 +7,22 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.
 ```
 
 2. Set Static IP, and Gateway IP to ShaneFirewall
+
+```
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
+```
 
 3. Disable Firewall
+
+```
 Set-NetFirewallProfile -Enabled False
+```
 
 4. Disable IPv6
+
+```
 Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+```
 
 5. Setting Hostname
 Rename-Computer -NewName "ShaneServer"
