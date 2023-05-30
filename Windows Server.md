@@ -109,23 +109,33 @@ Disable-InternetExplorerEsc
 ```
 
 15. Setting Time Zone
+
+```
 Set-TimeZone -Name "Eastern Standard Time"
+```
 
 16. Creating OU, Users, and Groups
 
-Creating OUs
+```
 New-ADOrganizationalUnit -Name "Shane Users"
 New-ADOrganizationalUnit -Name "Shane Computers"
 $users = Get-ADOrganizationalUnit -LDAPFilter '(name=Shane Users)'
 $users.DistinguishedName
+```
 
 Setting passwords for accounts
+
+```
 $secpass = Read-Host "Set password for accounts" -AsSecureString
+```
 
 Creating accounts
 
 Regular User Account
+
+```
 New-ADUser -UserPrincipalName "Shane@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "Shane"
+```
 
 Admin User Account
 New-ADUser -UserPrincipalName "ShaneAdmin@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "ShaneAdmin"
@@ -256,6 +266,8 @@ Approve Critical Updates for Production Computers Manually
 Get-WsusUpdate | Where-object {$_.Classification -like "Critical Updates"} | Approve-WsusUpdate -Action Install -TargetGroupName "Shane WSUS Production Computers"
 
 21. Installation and Configuration of SQL Server PowerShell Module
+
+```
 Install-Module SQLServer 
 
 Installation of dbatools
@@ -270,8 +282,13 @@ Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
 
 $url2= https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us
 Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
+```
 
+      
 Installation of SQL Server Express and SSMS
+
+```
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/69121988-ff49-405c-ac66-14d660a26609)
+```
