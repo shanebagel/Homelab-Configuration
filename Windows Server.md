@@ -1,9 +1,8 @@
-# Windows Server 1:
+Windows Server 1:
 
-```
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
+1. Set DNS to Loopback Address
 
-# 1. Set DNS to Loopback Address
+```Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 ```
 
 2. Set Static IP, and Gateway IP to ShaneFirewall
@@ -19,11 +18,8 @@ Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 Rename-Computer -NewName "ShaneServer"
 Restart-Computer
 
-```
-# 6. Update PowerShell Help
-
+6. Update PowerShell Help
 Update-Help
-```
 
 7. Install ADDS and Management tools
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
@@ -236,4 +232,4 @@ Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
 Installation of SQL Server Express and SSMS
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/d90fff3c-bc2d-4648-811a-fb30701f72c3)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/69121988-ff49-405c-ac66-14d660a26609)
