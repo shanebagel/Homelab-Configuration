@@ -18,15 +18,7 @@ Veeam - Backups
 
 # VMs:
 
-Server	OS	Services	Hostname	IP Address
-Firewall/Gateway	pfSense	Firewall / VPN	ShaneFirewall	192.168.1.1
-Windows Server	Windows Server 2019	DC 1 / DNS / DHCP / WSUS / SQL	ShaneServer	192.168.1.100
-Windows Server 2	Windows Server 2019	DC 2 / File / Print / RRAS / RDS 	ShaneServer2	192.168.1.101
-Windows Client	Windows 10 Pro	Client	ShaneClient	192.168.1.102
-Linux Server	CentOS	-	ShaneLinux	192.168.1.103
-NAS	TrueNAS	Network Storage	ShaneNAS	192.168.1.104
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/c294daf4-1c0e-419d-a8bb-0634f264b052)
-
 
 # Host:
 
