@@ -25,29 +25,53 @@ Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 ```
 
 5. Setting Hostname
+
+```
 Rename-Computer -NewName "ShaneServer"
 Restart-Computer
+```
 
 6. Update PowerShell Help
+
+```
 Update-Help
+```
 
 7. Install ADDS and Management tools
+
+```
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+```
 
 8. Test the configuration before installing the forest
+
+```
 Test-ADDSForestInstallation -DomainName shane.local -InstallDns
+```
 
 9. Creating a new AD Forest with domain name Shane.local
+
+```
 Install-ADDSForest -DomainName shane.local -InstallDNS
+```
 
 10. After reboot, check that AD is installed and Domain is configured
+
+```
 Get-ADDomainController
+```
 
 11. Install PowerShell Version 7
+
+```
 Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
+```
 
 12. Install NuGet Package manager, prerequisite for installing modules
+
+```
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
 
 $Modules = @( 
 "Az", 
@@ -60,10 +84,17 @@ $Modules = @(
 "MSOnline" 
 )
 
+```
+
 13. Installing Modules
+
+```
 Install-Module -Name $Modules -Force
+```
 
 14. Disable IE Enhanced Security 
+
+```
 function Disable-InternetExplorerESC {
       $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
       $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
@@ -75,6 +106,7 @@ function Disable-InternetExplorerESC {
       Write-Host "IE Enhanced Security Configuration (ESC) has been disabled."
  }
 Disable-InternetExplorerEsc
+```
 
 15. Setting Time Zone
 Set-TimeZone -Name "Eastern Standard Time"
