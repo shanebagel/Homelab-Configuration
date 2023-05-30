@@ -21,6 +21,7 @@ Restart-Computer
 
 ````
 # 6. Update PowerShell Help
+
 Update-Help
 ````
 
