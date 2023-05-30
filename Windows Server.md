@@ -215,7 +215,7 @@ Add-DNSServerResourceRecordPtr -Name '105' -ZoneName '1.168.192.in-addr.arpa' -P
 Confirm DNS Records 
 
 ```
-Get-DNSServerResourceRecord -ZoneName "<Zone>" -ComputerName <DNSServerName>
+Get-DNSServerResourceRecord -ZoneName "shane.local" -ComputerName "shaneserver"
 ```
 
 18. Installation and Configuration of DHCP
