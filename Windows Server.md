@@ -1,5 +1,7 @@
+# Windows Server 
+
 1. Set DNS to Loopback Address
-  Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
 2. Set Static IP, and Gateway IP to ShaneFirewall
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
@@ -228,4 +230,4 @@ Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
 Installation of SQL Server Express and SSMS
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/d7f66886-f8ec-4698-9f46-0f14f07a8294)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/85bcf544-456b-4fdd-ae6e-4d50f297ffc1)
