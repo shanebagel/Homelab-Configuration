@@ -1,9 +1,9 @@
 Windows Server 1:
 
-  1. Set DNS to Loopback Address
+1. Set DNS to Loopback Address
   Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
-  2. Set Static IP, and Gateway IP to ShaneFirewall
+2. Set Static IP, and Gateway IP to ShaneFirewall
   New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 
 3. Disable Firewall
