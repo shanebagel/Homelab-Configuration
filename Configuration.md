@@ -7,25 +7,25 @@ Firewalls must be disabled in guest OS of VMs or networking will not work proper
 # Things to do…
 Things to do…
 
-Windows - Setup SQL Server 
+>Windows - Setup SQL Server 
 
-Windows - Setup RRAS Server 
+>Windows - Setup RRAS Server 
 
-Windows - Setup RDS Server 
+>Windows - Setup RDS Server 
 
-Windows - Setup ADCS 
+>Windows - Setup ADCS 
 
-Windows - Setup ADFS 
+>Windows - Setup ADFS 
 
-Windows - Setup NPS Server 
+>Windows - Setup NPS Server 
 
-Windows - Setup IIS Server 
+>Windows - Setup IIS Server 
 
-Update Network Diagram to Include Internal/External Adapters 
+>Update Network Diagram to Include Internal/External Adapters 
 
-pfSense - Add More Rules, Setup VPN 
+>pfSense - Add More Rules, Setup VPN 
 
-Veeam - Backups 
+>Veeam - Backups 
 
 # VMs:
 
