@@ -269,10 +269,17 @@ Get-WsusUpdate | Where-object {$_.Classification -like "Critical Updates"} | App
 
 ```
 Install-Module SQLServer 
+```
 
 Installation of dbatools
-Install-Module dbatools 
 
+```
+Install-Module dbatools 
+```
+      
+Setting path for SQL Installation and downloading installer files
+
+```
 New-Item -Type Directory -Name "SQL"
 Set-Location "C:\SQL"
 $path = "C:\SQL"
