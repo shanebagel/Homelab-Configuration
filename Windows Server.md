@@ -1,35 +1,35 @@
 # Windows Server 1:
 
 ## Configuration
-1. Set DNS to Loopback Address
+1. Set DNS to Loopback Address  
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
-2. Set Static IP, and Gateway IP to ShaneFirewall
+2. Set Static IP, and Gateway IP to ShaneFirewall  
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 
-3. Disable Firewall
+3. Disable Firewall  
 Set-NetFirewallProfile -Enabled False
 
-4. Disable IPv6
+4. Disable IPv6  
 Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 
-5. Setting Hostname
-Rename-Computer -NewName "ShaneServer"
+5. Setting Hostname  
+Rename-Computer -NewName "ShaneServer"  
 Restart-Computer
 
-6. Update PowerShell Help
+6. Update PowerShell Help  
 Update-Help
 
-7. Install ADDS and Management tools
-Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+7. Install ADDS and Management tools  
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools  
 
-8. Test the configuration before installing the forest
+8. Test the configuration before installing the forest  
 Test-ADDSForestInstallation -DomainName shane.local -InstallDns
 
-9. Creating a new AD Forest with domain name Shane.local
+9. Creating a new AD Forest with domain name Shane.local  
 Install-ADDSForest -DomainName shane.local -InstallDNS
 
-10. After reboot, check that AD is installed and Domain is configured
+10. After reboot, check that AD is installed and Domain is configured  
 Get-ADDomainController
 
 11. Install PowerShell Version 7
