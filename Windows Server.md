@@ -1,10 +1,10 @@
-# Windows Server 
+# Windows Server 1:
 
 1. Set DNS to Loopback Address
-  Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
 2. Set Static IP, and Gateway IP to ShaneFirewall
-  New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 
 3. Disable Firewall
 Set-NetFirewallProfile -Enabled False
@@ -96,7 +96,7 @@ Adding admin user to default SGs
 Add-ADGroupMember -Identity "Domain Admins" -Members "ShaneAdmin"
 Add-ADGroupMember -Identity "Server Operators" -Members "ShaneAdmin"
 
-Adding users created in the Shane OU to the Shane SG
+# Adding users created in the Shane OU to the Shane SG
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
 
 17. Configuring DNS
@@ -230,4 +230,4 @@ Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
 Installation of SQL Server Express and SSMS
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/85bcf544-456b-4fdd-ae6e-4d50f297ffc1)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/97e44ca0-8ef8-435d-ba68-0016c88daac9)
