@@ -18,7 +18,7 @@ https://192.168.1.1:443
 
 5. TCP/IP settings should automatically apply to the both interfaces.
 
-Interfaces:
+### Interfaces:
 
   ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/5b422407-42d5-4fb3-bb86-6064084d484b)
 
@@ -41,7 +41,7 @@ Interfaces:
 20. Check "Allow Agent Forwarding"
 21. SSH port: 22
 
-## Interface Rule Directions:
+### Interface Rule Directions:
 ```
 Always configure Inbound (Ingress) Rules on WAN Interface - External Switch
 Always configure Outbound Rules (Egress) on LAN Interface - Internal Switch 
@@ -49,7 +49,7 @@ OpenVPN <- Inbound (Egress) Rules
 ```
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/e1a94d82-1b0e-4a4f-8cc4-11353fe9f740)
 
-## Default Firewall Rule:
+### Default Firewall Rule:
 Implicit Deny (If interface has no rules - all traffic will be blocked)
 
 ```
@@ -61,7 +61,7 @@ Source: <Source of Network Traffic>
 Destination: <Destination of Network Traffic>
 ```
   
-## Rules:
+### Rules:
 ```
 22. Edit LAN interface Rule 'Anti-Lockout Rule' to use port 443 HTTPS instead of HTTP
 23. Remove LAN interface Rule 'Default allow LAN to any rule'
