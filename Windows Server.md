@@ -97,7 +97,7 @@ Adding admin user to default SGs
 Add-ADGroupMember -Identity "Domain Admins" -Members "ShaneAdmin"
 Add-ADGroupMember -Identity "Server Operators" -Members "ShaneAdmin"
 
-# Adding users created in the Shane OU to the Shane SG
+Adding users created in the Shane OU to the Shane SG
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
 
 17. Configuring DNS
