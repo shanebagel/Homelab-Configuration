@@ -38,6 +38,12 @@ Internal Switch is for internal LAN communication: All Addresses are Static in G
 
 External Switch is for external WAN communication: Address can fluctuate and is set via DHCP
 
+vSwitch Name	IP	Configuration
+"Internal Switch"	192.168.1.1	New-NetIPAddress -InterfaceAlias "vEthernet (Internal Switch)" -IPAddress 192.168.1.1 -PrefixLength "24"
+"External Switch"	DHCP	N/A - Address is Dynamic and changes when networks are changed
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/276cfcec-1aad-4ace-bd84-2101923cf127)
+
+
 # vSwitch Name	IP	Configuration
 "Internal Switch"	192.168.1.1	New-NetIPAddress -InterfaceAlias "vEthernet (Internal Switch)" -IPAddress 192.168.1.1 -PrefixLength "24"
 "External Switch"	DHCP	N/A - Address is Dynamic and changes when networks are changed
