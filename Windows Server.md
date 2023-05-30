@@ -1,10 +1,10 @@
 Windows Server 1:
 
-1. Set DNS to Loopback Address
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
+  1. Set DNS to Loopback Address
+  Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
-2. Set Static IP, and Gateway IP to ShaneFirewall
-New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
+  2. Set Static IP, and Gateway IP to ShaneFirewall
+  New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 
 3. Disable Firewall
 Set-NetFirewallProfile -Enabled False
@@ -96,7 +96,7 @@ Adding admin user to default SGs
 Add-ADGroupMember -Identity "Domain Admins" -Members "ShaneAdmin"
 Add-ADGroupMember -Identity "Server Operators" -Members "ShaneAdmin"
 
-# Adding users created in the Shane OU to the Shane SG
+Adding users created in the Shane OU to the Shane SG
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
 
 17. Configuring DNS
