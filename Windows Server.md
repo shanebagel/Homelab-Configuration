@@ -1,35 +1,32 @@
-# Windows Server 1:
+1. Set DNS to Loopback Address
+  Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
-## Configuration
-1. Set DNS to Loopback Address  
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
-
-2. Set Static IP, and Gateway IP to ShaneFirewall  
+2. Set Static IP, and Gateway IP to ShaneFirewall
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 
-3. Disable Firewall  
+3. Disable Firewall
 Set-NetFirewallProfile -Enabled False
 
-4. Disable IPv6  
+4. Disable IPv6
 Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 
-5. Setting Hostname  
-Rename-Computer -NewName "ShaneServer"  
+5. Setting Hostname
+Rename-Computer -NewName "ShaneServer"
 Restart-Computer
 
-6. Update PowerShell Help  
+6. Update PowerShell Help
 Update-Help
 
-7. Install ADDS and Management tools  
-Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools  
+7. Install ADDS and Management tools
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
 
-8. Test the configuration before installing the forest  
+8. Test the configuration before installing the forest
 Test-ADDSForestInstallation -DomainName shane.local -InstallDns
 
-9. Creating a new AD Forest with domain name Shane.local  
+9. Creating a new AD Forest with domain name Shane.local
 Install-ADDSForest -DomainName shane.local -InstallDNS
 
-10. After reboot, check that AD is installed and Domain is configured  
+10. After reboot, check that AD is installed and Domain is configured
 Get-ADDomainController
 
 11. Install PowerShell Version 7
@@ -231,4 +228,4 @@ Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
 Installation of SQL Server Express and SSMS
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/6e73f99a-dd69-4425-8b34-1a55fba4fc6c)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/d7f66886-f8ec-4698-9f46-0f14f07a8294)
