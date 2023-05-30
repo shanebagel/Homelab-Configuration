@@ -322,6 +322,7 @@ Enable both policies - Set the WSUS Server that clients will use for updates via
 >http://ShaneServer.shane.local:8530
 
 >Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Synchronizations per day: 1
+
 >Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
 
 Add Client Computers to WSUS Computer Group
@@ -387,5 +388,4 @@ Installation of SQL Server Express and SSMS
 ```
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/69121988-ff49-405c-ac66-14d660a26609)
 ```
