@@ -1,4 +1,4 @@
-# Windows Server 1:
+Windows Server 1:
 
 1. Set DNS to Loopback Address
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
@@ -230,4 +230,4 @@ Invoke-WebRequest -Uri $url2 -OutFile $path -UseBasicParsing
 Installation of SQL Server Express and SSMS
 Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQL2022-SSEI-Expr.exe" -ArgumentList "/S /v/qn" -PassThru
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/97e44ca0-8ef8-435d-ba68-0016c88daac9)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/d90fff3c-bc2d-4648-811a-fb30701f72c3)
