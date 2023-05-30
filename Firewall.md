@@ -1,6 +1,5 @@
 # Firewall:
 
-## Configuration
 Web Interface for pfSense Firewall
 https://192.168.1.1:443
 
