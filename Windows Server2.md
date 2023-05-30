@@ -1,69 +1,205 @@
-Firewall:
+# Windows Server 2:
 
-Web Interface for pfSense Firewall
-https://192.168.1.1:443
+1. Set DNS to Server 1
 
-1. Connect Hyper-V External Switch
+```
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "192.168.1.100"
+```
 
-2. Configure WAN Interface for External Switch: DHCP
+2. Set Static IP, and Gateway to Host Adapter IP
 
-3. Connect Hyper-V Internal Switch
+```
+New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.101 -PrefixLength "24" -DefaultGateway 192.168.1.1
+```
 
-4. Configure LAN Interface for Internal Switch: Static IP
-IP: 192.168.1.1
-Subnet: 24
-Gateway: N/A
+3. Disable firewall
 
-5. TCP/IP settings should automatically apply to the both interfaces.
+```
+Set-NetFirewallProfile -Enabled False
+```
 
-Interfaces:
+4. Disable IPv6
+
+```
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+```
+
+5. Setting Hostname
+
+```
+Rename-Computer -NewName "ShaneServer2"
+Restart-Computer
+```
+
+6. Update PowerShell Help
+
+```
+Update-Help
+```
+
+7. Install ADDS and Management tools
+
+```
+Install-WindowsFeature -name AD-Domain-Services -IncludeManagementTools
+```
+
+8. Join Server 2 to Domain
+
+```
+Install-ADDSDomainController -DomainName "shane.local" -Credential (Get-Credential "Shane\Administrator")
+```
+
+9. Install PowerShell Version 7
+
+```
+Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
+```
+
+10. Install NuGet Package manager, prerequisite for installing modules
+
+```
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+$Modules = @( 
+"Az", 
+"AzureAD", 
+"MicrosoftTeams", 
+"ExchangeOnlineManagement", 
+"Microsoft.Online.SharePoint.PowerShell", 
+"SharePointPnPPowerShellOnline", 
+"Microsoft.Graph", 
+"MSOnline" 
+)
+```
+
+11. Installing Modules
+
+```
+Install-Module -Name $Modules -Force
+```
+
+12. Disable IE Enhanced Security 
+
+```
+function Disable-InternetExplorerESC {
+      $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+      $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+      Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0 -Force
+      Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0 -Force
+      Rundll32 iesetup.dll, IEHardenLMSettings
+      Rundll32 iesetup.dll, IEHardenUser
+      Rundll32 iesetup.dll, IEHardenAdmin
+      Write-Host "IE Enhanced Security Configuration (ESC) has been disabled."
+ }
+Disable-InternetExplorerEsc
+```
+
+13. Setting Time Zone
+
+```
+Set-TimeZone -Name "Eastern Standard Time"
+```
+
+14. Install Windows File Server Role
+
+```
+Install-WindowsFeature File-Services
+```
+
+15. Configuring and Mapping Network share for File Server
+
+```
+Set-Location C:\
+New-Item -Type Directory -Name ShaneShare
+New-SmbShare -Path C:\ShaneShare -Name "ShaneShare"
+```
+
+Creating a PS Session variable
+
+```
+$session = New-PSSession -ComputerName "shaneclient" -Credential(Get-Credential)
+```
+
+Creating a mapping of shared drive on Shaneclient to move files between server2 and client
+
+```
+Invoke-command -Session $session -ScriptBlock {New-PSDrive -Name "S" -PSProvider "FileSystem" -Root "\\ShaneServer3\Shaneshare"}
+```
 
 
+16. Install Print and Document Services 
 
-6. Hostname: ShaneFirewall
-7. Domain: Shane
-8. DNS Resolution Behavior: Use local DNS (127.0.0.1), fall back to remote DNS Servers (Default)
-9. Primary DNS Server: 8.8.8.8 (Google Public DNS) 
-10. Secondary DNS Server: 192.168.1.100 (ShaneServer)
-11. Uncheck "Allow DNS servers to be overridden by DHCP/PPP on WAN" 
-12. Uncheck "Block private networks from entering via WAN"
-13. Uncheck "Block non-Internet routed networks from entering WAN"
-14. Time Server Hostname: 0.us.pool.ntp.org
-15. Timezone: US/Eastern
-16. Set Admin password
-17. Reload 
-18. Check "Enable Secure Shell"
-19. SSH key Only: Public Key Only
-20. Check "Allow Agent Forwarding"
-21. SSH port: 22
+```
+Install-WindowsFeature Print-Services
+```
 
-Interface Rule Directions:
-Always configure Inbound (Ingress) Rules on WAN Interface - External Switch
-Always configure Outbound Rules (Egress) on LAN Interface - Internal Switch 
-OpenVPN <- Inbound (Egress) Rules 
+Create Driver Directory
 
+```
+New-Item -Type Directory -Name "Drivers"
+Set-Location Drivers
+```
 
+Disable Progress Preference 
 
-Default Firewall Rule:
-Implicit Deny (If interface has no rules - all traffic will be blocked)
+```
+$ProgressPreference= 'SilentlyContinue'
+```
 
-Structure of Firewall Rules:
-Action: Pass/Block/Reject
-Interface: LAN/WAN
-Protocol: <Protocol>
-Source: <Source of Network Traffic>
-Destination: <Destination of Network Traffic>
+Download Driver
 
-Rules:
-22. Edit LAN interface Rule 'Anti-Lockout Rule' to use port 443 HTTPS instead of HTTP
-23. Remove LAN interface Rule 'Default allow LAN to any rule'
-24. Remove LAN interface Rule 'Default allow LAN IPv6 to any rule'
-25. Add LAN interface Rule to Allow Egress ICMP traffic - To permit pinging 
-26. Add LAN interface Rule to Allow Egress SSH traffic - To permit SSH traffic 
-27. Add LAN interface Rule to Allow Egress DNS traffic - To permit name resolution
-28. Add LAN interface Rule to Allow Egress HTTP traffic - To permit egress HTTP traffic
-29. Add LAN interface Rule to Allow Egress HTTPS traffic - To permit egress HTTPS traffic
-30. Add LAN interface Rule to Allow Egress DNS over TLS traffic - To permit name resolution
+```
+$url = "https://ftp.hp.com/pub/softlib/software12/COL53284/bi-128455-3/Full_Webpack-118-OJ8640_Full_Webpack.exe"
+$path = "C:\Drivers\Driver.exe"
+Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
+```
 
+Install Driver 
 
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/13e9e8c6-4e0a-4a17-86cd-5a88903a421a)
+```
+Start-Process -Wait -FilePath ".\Driver.exe" -ArgumentList "/S /v/qn" -PassThru
+```
+
+Get list of newly installed printer drivers
+
+```
+Get-PrinterDriver
+```
+
+>Add an External Hyper-V Adapter to reach LAN where printer is connected
+
+Test network connectivity to printer
+
+```
+Test-Connection -ComputerName 192.168.1.125
+```
+
+Add TCP/IP printer port
+
+```
+Add-PrinterPort -Name "TCPPort:" -PrinterHostAddress "192.168.1.125"
+```
+
+Add printer via TCP/IP
+
+```
+Add-Printer -Name "HP Printer" -DriverName "HP Universal Printing PCL 6" -PortName "TCPPort:"
+```
+
+Validate printer was added
+
+```
+Get-Printer | Where-Object -Filter {$_.Name -eq "HP Printer"}
+```
+
+Share printer to other devices on network
+
+```
+Set-Printer -Name "HP Printer" -Shared $True -ShareName "HP Printer"
+```
+
+Validate printer share was added
+
+```
+Get-Printer | Where-Object -FilterScript {$_.ShareName -eq "HP Printer"}
+```
