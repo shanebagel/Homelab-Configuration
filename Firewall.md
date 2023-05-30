@@ -10,11 +10,11 @@ https://192.168.1.1:443
 3. Connect Hyper-V Internal Switch
 
 4. Configure LAN Interface for Internal Switch: Static IP
-```
+
   IP: 192.168.1.1  
   Subnet: 24  
   Gateway: N/A  
-```
+
 
 5. TCP/IP settings should automatically apply to the both interfaces.
 
@@ -42,27 +42,27 @@ https://192.168.1.1:443
 21. SSH port: 22
 
 ### Interface Rule Directions:
-```
+
 Always configure Inbound (Ingress) Rules on WAN Interface - External Switch
 Always configure Outbound Rules (Egress) on LAN Interface - Internal Switch 
 OpenVPN <- Inbound (Egress) Rules 
-```
+
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/e1a94d82-1b0e-4a4f-8cc4-11353fe9f740)
 
 ### Default Firewall Rule:
 Implicit Deny (If interface has no rules - all traffic will be blocked)
 
-```
+
 Structure of Firewall Rules:
 Action: Pass/Block/Reject
 Interface: LAN/WAN
 Protocol: <Protocol>
 Source: <Source of Network Traffic>
 Destination: <Destination of Network Traffic>
-```
+
   
 ### Rules:
-```
+
 22. Edit LAN interface Rule 'Anti-Lockout Rule' to use port 443 HTTPS instead of HTTP
 23. Remove LAN interface Rule 'Default allow LAN to any rule'
 24. Remove LAN interface Rule 'Default allow LAN IPv6 to any rule'
@@ -72,7 +72,7 @@ Destination: <Destination of Network Traffic>
 28. Add LAN interface Rule to Allow Egress HTTP traffic - To permit egress HTTP traffic
 29. Add LAN interface Rule to Allow Egress HTTPS traffic - To permit egress HTTPS traffic
 30. Add LAN interface Rule to Allow Egress DNS over TLS traffic - To permit name resolution
-```
+
 
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/caf9f369-a65f-4f47-b53a-e1eea6cee9f7)
 
