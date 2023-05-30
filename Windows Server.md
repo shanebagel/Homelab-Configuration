@@ -1,4 +1,4 @@
-Windows Server 1:
+# Windows Server 1:
 
 1. Set DNS to Loopback Address
 
