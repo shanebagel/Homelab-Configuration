@@ -170,8 +170,9 @@ Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-
 
 17. Configuring DNS
 
-```
 Add DNS Forwarder to 8.8.8.8 - Anything non-resolvable by local DNS server 'ShaneServer' uses Firewalls WAN interface to reach Googles Public DNS 
+
+```
 Add-DNSServerForwarder 8.8.8.8 -PassThru; Get-DNSServerForwarder
 ```
 
