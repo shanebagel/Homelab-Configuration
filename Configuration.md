@@ -25,6 +25,8 @@ Windows Server 2	Windows Server 2019	DC 2 / File / Print / RRAS / RDS 	ShaneServ
 Windows Client	Windows 10 Pro	Client	ShaneClient	192.168.1.102
 Linux Server	CentOS	-	ShaneLinux	192.168.1.103
 NAS	TrueNAS	Network Storage	ShaneNAS	192.168.1.104
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/c294daf4-1c0e-419d-a8bb-0634f264b052)
+
 
 # Host:
 
