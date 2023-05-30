@@ -53,11 +53,11 @@ OpenVPN <- Inbound (Egress) Rules
 Implicit Deny (If interface has no rules - all traffic will be blocked)
 
 ### Structure of Firewall Rules:
-Action: Pass/Block/Reject
-Interface: LAN/WAN
-Protocol: <Protocol>
-Source: <Source of Network Traffic>
-Destination: <Destination of Network Traffic>
+>Action: Pass/Block/Reject
+>Interface: LAN/WAN
+>Protocol: <Protocol>
+>Source: <Source of Network Traffic>
+>Destination: <Destination of Network Traffic>
 
   
 ### Rules:
