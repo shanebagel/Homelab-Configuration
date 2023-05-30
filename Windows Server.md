@@ -19,8 +19,10 @@ Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 Rename-Computer -NewName "ShaneServer"
 Restart-Computer
 
-6. Update PowerShell Help
+````
+# 6. Update PowerShell Help
 Update-Help
+````
 
 7. Install ADDS and Management tools
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
