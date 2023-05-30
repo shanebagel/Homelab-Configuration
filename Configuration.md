@@ -1,7 +1,6 @@
 ### Hyper-V Homelab Network Configuration:
 
-## Domain: Shane.local
-
+# Domain: Shane.local
 # Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
 # Things to do…
