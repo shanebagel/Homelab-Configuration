@@ -314,14 +314,14 @@ $wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::getUpdateServer('s
 Add "Shane WSUS Production Computers" Group
 
 Configuring GPO to point computers at WSUS server
-Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Configure Automatic Updates
-Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Specify intranet Microsoft update service location
+>Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Configure Automatic Updates
+>Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Specify intranet Microsoft update service location
 
 Enable both policies - Set the WSUS Server that clients will use for updates via GPO
-http://ShaneServer.shane.local:8530
+>http://ShaneServer.shane.local:8530
 
-Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Synchronizations per day: 1
-Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
+>Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Synchronizations per day: 1
+>Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
 
 Add Client Computers to WSUS Computer Group
 
