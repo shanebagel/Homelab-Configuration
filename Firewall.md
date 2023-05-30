@@ -11,9 +11,11 @@ https://192.168.1.1:443
 3. Connect Hyper-V Internal Switch
 
 4. Configure LAN Interface for Internal Switch: Static IP  
-  ```IP: 192.168.1.1  
+```
+  IP: 192.168.1.1  
   Subnet: 24  
-  Gateway: N/A```  
+  Gateway: N/A  
+```
 
 5. TCP/IP settings should automatically apply to the both interfaces.
 
