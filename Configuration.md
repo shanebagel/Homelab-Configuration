@@ -45,8 +45,4 @@ Azure AD Connect is running on ShaneServer
 Credentials: ShaneAdmin@Shane-Hartley.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
 
 # Network Diagram:
-
-
-
-Network Diagram.drawio
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/f5d7948a-c45a-481e-8b10-b4dcb40d6086)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/80ac2376-4e2e-4d71-a982-ad7b6be4202a)
