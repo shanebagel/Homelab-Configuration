@@ -10,7 +10,7 @@ https://192.168.1.1:443
 
 3. Connect Hyper-V Internal Switch
 
-4. Configure LAN Interface for Internal Switch: Static IP  
+4. Configure LAN Interface for Internal Switch: Static IP
 ```
   IP: 192.168.1.1  
   Subnet: 24  
@@ -20,7 +20,8 @@ https://192.168.1.1:443
 5. TCP/IP settings should automatically apply to the both interfaces.
 
 Interfaces:
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/5b422407-42d5-4fb3-bb86-6064084d484b)
+
+  ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/5b422407-42d5-4fb3-bb86-6064084d484b)
 
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/b0640757-5d3d-470a-b145-9047ab7699cc)
 
