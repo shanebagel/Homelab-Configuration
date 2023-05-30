@@ -1,6 +1,6 @@
-Windows Server 1:
+# Windows Server 1:
 
-Configuration
+## Configuration
 1. Set DNS to Loopback Address
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
