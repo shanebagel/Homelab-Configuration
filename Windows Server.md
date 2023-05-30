@@ -273,6 +273,7 @@ Set-GPRegistryValue -Name "Disable Command Prompt" -Key "HKCU\Software\Policies\
 Manually Create GPOs for Printer/Drive Maps
 
 >User Configuration\Preferences\Control Panel Settings\Printers\Shared Printer (Name: \\shaneserver2\HP Printer)
+
 >User Configuration\Preferences\Windows Settings\Drive Maps\Drive Map (Drive: S \\shaneserver2\ShaneShare)
 
 Applying the GPO to OU "Shane Users" which contains the Client PC
