@@ -138,104 +138,178 @@ New-ADUser -UserPrincipalName "Shane@shane.local" -Path $users.DistinguishedName
 ```
 
 Admin User Account
+
+```
 New-ADUser -UserPrincipalName "ShaneAdmin@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "ShaneAdmin"
+```
 
 Service Account
+
+```
 New-ADServiceAccount -Path $users.DistinguishedName -Name "ShaneService" -DNSHostName ShaneServer.shane.local
+```
 
 Creating Security Group ShaneSG
+
+```
 New-ADGroup -Name "ShaneSG" -SamAccountName ShaneSG -GroupCategory Security -GroupScope Global -DisplayName "ShaneSG" -Path $users.DistinguishedName
+```
 
 Adding admin user to default SGs 
+
+```
 Add-ADGroupMember -Identity "Domain Admins" -Members "ShaneAdmin"
 Add-ADGroupMember -Identity "Server Operators" -Members "ShaneAdmin"
+```
 
 Adding users created in the Shane OU to the Shane SG
+
+```
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
+```
 
 17. Configuring DNS
 
+```
 Add DNS Forwarder to 8.8.8.8 - Anything non-resolvable by local DNS server 'ShaneServer' uses Firewalls WAN interface to reach Googles Public DNS 
 Add-DNSServerForwarder 8.8.8.8 -PassThru; Get-DNSServerForwarder
+```
 
 Add Forward Lookup Zone
+
+```
 Add-DNSServerPrimaryZone -Name "shane.local" -ComputerName "ShaneServer" -ReplicationScope "Domain" -PassThru
 Get-DNSServerZone -ZoneName "Shane.local"
+```
 
 Add Reverse Lookup Zone
+
+```
 Add-DNSServerPrimaryZone -NetworkID "192.168.1/24" -ComputerName "Shaneserver" -ReplicationScope "Domain" -PassThru
 Get-DNSServerZone -ZoneName "1.168.192.in-addr.arpa"
+```
 
 Add A Records
+
+```
 Add-DNSServerResourceRecordA -Name "Shaneserver" -ZoneName "Shane.local" -IPv4Address "192.168.1.100" -ComputerName "ShaneServer"
 Add-DNSServerResourceRecordA -Name "Shaneserver2" -ZoneName "Shane.local" -IPv4Address "192.168.1.101" -ComputerName "ShaneServer"
 Add-DNSServerResourceRecordA -Name "Shaneclient" -ZoneName "Shane.local" -IPv4Address "192.168.1.102" -ComputerName "ShaneServer"
 Add-DNSServerResourceRecordA -Name "Shanelinux" -ZoneName "Shane.local" -IPv4Address "192.168.1.103" -ComputerName "ShaneServer"
 Add-DNSServerResourceRecordA -Name "Shanenas" -ZoneName "Shane.local" -IPv4Address "192.168.1.104" -ComputerName "ShaneServer"
 Add-DNSServerResourceRecordA -Name "Shanefirewall" -ZoneName "Shane.local" -IPv4Address "192.168.1.105" -ComputerName "ShaneServer"
+```
 
 Add PTR Records
+
+```
 Add-DNSServerResourceRecordPtr -Name '100' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'Shaneserver.shane.local' -ComputerName "shaneserver"
 Add-DNSServerResourceRecordPtr -Name '101' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneserver2.shane.local' -ComputerName "shaneserver"
 Add-DNSServerResourceRecordPtr -Name '102' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneclient.shane.local' -ComputerName "shaneserver"
 Add-DNSServerResourceRecordPtr -Name '103' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanelinux.shane.local' -ComputerName "shaneserver"
 Add-DNSServerResourceRecordPtr -Name '104' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanenas.shane.local' -ComputerName "shaneserver"
 Add-DNSServerResourceRecordPtr -Name '105' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanefirewall.shane.local' -ComputerName "shaneserver"
+```
 
 Confirm DNS Records 
+
+```
 Get-DNSServerResourceRecord -ZoneName "<Zone>" -ComputerName <DNSServerName>
+```
 
 18. Installation and Configuration of DHCP
+
+```
 Install-WindowsFeature -Name dhcp -IncludeManagementTools
+```
 
 Enable DHCP to communicate with AD
+
+```
 Add-DHCPServerInDC -DnsName ShaneServer.shane.local
+```
 
 Add a DHCP scope - .100 to .125
+
+```
 Add-DhcpServerv4Scope -Name "ShaneScope" -StartRange 192.168.1.100 -EndRange 192.168.1.125 -SubnetMask 255.255.255.0
+```
 
 Add Reservation to DHCP scope for ShaneClient - 192.168.1.102
+
+```
 Add-DhcpServerv4Reservation -Name "ShaneReservation" -ScopeId 192.168.1.0 -IPAddress 192.168.1.102 -ClientID "<ShaneClientMAC>" -Description "Reserved IP Address for ShaneClient"
+```
 
 Add Gateway, Domain Name & DNS Server to DHCP Scope
+
+```
 Set-DhcpServerv4OptionValue -ComputerName "shaneserver.shane.local" -ScopeId 192.168.1.0 -DnsServer 192.168.1.100 -DnsDomain "shane.local" -Router 192.168.1.1
+```
 
 Reboot Server after DHCP Configuration 
+
+```
 Restart-Computer
+```
 
 19. Creating GPOs
+
+```
 New-GPO -Name "Disable Control Panel"
 New-GPO -Name "Disable Command Prompt"
 New-GPO -Name "Mapped Drive"
 New-GPO -Name "Mapped HP Printer"
+```
 
 Configuring GPOs 
+
+```
 Set-GPRegistryValue -Name "Disable Control Panel" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -ValueName "NoControlPanel" -Value 1 -Type DWORD
 Set-GPRegistryValue -Name "Disable Command Prompt" -Key "HKCU\Software\Policies\Microsoft\Windows\System" -ValueName "DisableCMD" -Value 1 -Type DWORD
+```
 
 Manually Create GPOs for Printer/Drive Maps
+
+```
 User Configuration\Preferences\Control Panel Settings\Printers\Shared Printer (Name: \\shaneserver2\HP Printer)
 User Configuration\Preferences\Windows Settings\Drive Maps\Drive Map (Drive: S \\shaneserver2\ShaneShare)
+```
 
 Applying the GPO to OU "Shane Users" which contains the Client PC
+
+```
 Get-GPO -Name "Disable Control Panel" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
 Get-GPO -Name "Disable Command Prompt" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
 Get-GPO -Name "Mapped Drive" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
 Get-GPO -Name "Mapped HP Printer" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
+```
 
 Confirm all GPOs are applying to OU
+
+```
 $gpos = Get-GPInheritance -Target "OU=Shane Users,DC=shane,DC=local"; $gpos.GpoLinks | Format-Table 
+```
 
 20. WSUS Installation and Configuration - Local Windows Database
+
+```
 Install-WindowsFeature -Name UpdateServices, UpdateServices-Ui , UpdateServices-WidDB -IncludeManagementTools
+```
 
 Set Database to WSUS Directory 
+
+```
 Set-Location "C:\Program Files\Update Services\Tools"
 .\WsusUtil.exe PostInstall CONTENT_DIR=C:\WSUS
+```
 
-Connect to WSUS Database
+Connect to local Windows WSUS Database
+
+```
 [void][reflection.assembly]::LoadWithPartialName(“Microsoft.UpdateServices.Administration”)
 $wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::getUpdateServer('shaneserver',$False,8530)
+```
 
 Add "Shane WSUS Production Computers" Group
 
@@ -250,20 +324,35 @@ Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Syn
 Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
 
 Add Client Computers to WSUS Computer Group
+
+```
 Get-WsusComputer | Add-WsusComputer -TargetGroupName "Shane WSUS Production Computers"
+```
 
 Configure Synchronization Source to be Microsoft Update
+
+```
 Set-WsusServerSynchronization -SyncFromMU
+```
 
 Start WSUS and Windows Update Services
+
+```
 Get-Service -Name "WsusService" | Start-Service
 Get-Service -Name "Wuauserv" | Start-Service
+```
 
 Start Update Synchronization 
+
+```
 (Get-WsusServer).GetSubscription().StartSynchronization()
+```
 
 Approve Critical Updates for Production Computers Manually
+
+```
 Get-WsusUpdate | Where-object {$_.Classification -like "Critical Updates"} | Approve-WsusUpdate -Action Install -TargetGroupName "Shane WSUS Production Computers"
+```
 
 21. Installation and Configuration of SQL Server PowerShell Module
 
