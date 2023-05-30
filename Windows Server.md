@@ -315,6 +315,7 @@ Add "Shane WSUS Production Computers" Group
 
 Configuring GPO to point computers at WSUS server
 >Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Configure Automatic Updates
+
 >Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Specify intranet Microsoft update service location
 
 Enable both policies - Set the WSUS Server that clients will use for updates via GPO
