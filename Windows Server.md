@@ -1,10 +1,10 @@
 # Windows Server 1:
 
-````
+```
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
 
 # 1. Set DNS to Loopback Address
-````
+```
 
 2. Set Static IP, and Gateway IP to ShaneFirewall
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
@@ -19,11 +19,11 @@ Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 Rename-Computer -NewName "ShaneServer"
 Restart-Computer
 
-````
+```
 # 6. Update PowerShell Help
 
 Update-Help
-````
+```
 
 7. Install ADDS and Management tools
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
