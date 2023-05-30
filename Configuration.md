@@ -1,7 +1,8 @@
 ### Hyper-V Homelab Network Configuration:
 
-# Domain: Shane.local
-# Firewalls must be disabled in guest OS of VMs or networking will not work properly
+Domain: Shane.local
+
+Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
 # Things to do…
 Windows - Setup SQL Server
