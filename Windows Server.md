@@ -389,5 +389,6 @@ Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -P
 Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassThru
 ```
 >Instance Name: SQLEXPRESS
+
 >Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
 
