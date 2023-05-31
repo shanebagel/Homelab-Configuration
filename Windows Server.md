@@ -377,7 +377,7 @@ Set-Location C:\SQL
 $ProgressPreference= 'SilentlyContinue'
 
 $url = "https://aka.ms/ssmsfullsetup"
-$path = "C:\SQL\SSMS.exe"
+$path = "C:\SQL\SSMS-Setup-ENU.exe"
 Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
 
 $url2 = "https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us"
@@ -385,7 +385,9 @@ $path2 = "C:\SQL\SQLServer.exe"
 Invoke-WebRequest -Uri $url2 -OutFile $path2 -UseBasicParsing
 
 Installation of SQL Server Express and SSMS
-Start-Process -Wait -FilePath ".\SSMS.exe" -ArgumentList "/S /v/qn" -PassThru
+Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassThru
 ```
+>Instance Name: SQLEXPRESS
+>Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
 
