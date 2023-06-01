@@ -383,7 +383,7 @@ Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
 $url2 = "https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us"
 $path2 = "C:\SQL\SQLServer.exe"
 Invoke-WebRequest -Uri $url2 -OutFile $path2 -UseBasicParsing
-``
+```
 
 Installation of SQL Server Express and SSMS
 
@@ -392,15 +392,15 @@ Start-Process -Wait -FilePath ".\﻿﻿SSMS-Setup-ENU.exe" -ArgumentList "/S /v/
 Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassThru
 ```
 
->Instance Name: SQLEXPRESS
->Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
->Server Instance: SHANESERVER\SQLEXPRESS
+>Instance Name: SQLEXPRESS<br>
+>Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;<br>
+>Server Instance: SHANESERVER\SQLEXPRESS<br>
 
->Set sa password
->Enable sa login
->Set SQL Server and Windows Authentication mode in SSMS
->Restart SSMS
->Restart SQL Server Service
+>Set sa password<br>
+>Enable sa login<br>
+>Set SQL Server and Windows Authentication mode in SSMS<br>
+>Restart SSMS<br>
+>Restart SQL Server Service<br>
 
 Set your Connection String for your SQL Server Database
 
