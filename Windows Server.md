@@ -367,7 +367,7 @@ Installation of dbatools
 ```
 Install-Module dbatools 
 ```
-      
+
 Setting path for SQL Installation and downloading installer files
 
 ```
@@ -377,18 +377,108 @@ Set-Location C:\SQL
 $ProgressPreference= 'SilentlyContinue'
 
 $url = "https://aka.ms/ssmsfullsetup"
-$path = "C:\SQL\SSMS-Setup-ENU.exe"
+$path = "C:\SQL\﻿﻿SSMS-Setup-ENU.exe"
 Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
 
 $url2 = "https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us"
 $path2 = "C:\SQL\SQLServer.exe"
 Invoke-WebRequest -Uri $url2 -OutFile $path2 -UseBasicParsing
+``
 
 Installation of SQL Server Express and SSMS
-Start-Process -Wait -FilePath ".\SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
+
+```
+Start-Process -Wait -FilePath ".\﻿﻿SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
 Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassThru
 ```
+
 >Instance Name: SQLEXPRESS
-
 >Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
+>Server Instance: SHANESERVER\SQLEXPRESS
 
+>Set sa password
+>Enable sa login
+>Set SQL Server and Windows Authentication mode in SSMS
+>Restart SSMS
+>Restart SQL Server Service
+
+Set your Connection String for your SQL Server Database
+
+```
+$DiskInfoSqlConnection = "Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;TrustServerCertificate=true;Encrypt=False;User Id=SHANE\administrator;Password=Booferino69" 
+```
+
+Create a new object representing the connection to your SQL Server
+
+```
+$Connection = New-Object System.Data.SqlClient.SqlConnection 
+```
+
+Set the ConnectionString property to the databases Connection String
+
+```
+$Connection.ConnectionString = $DiskInfoSqlConnection 
+```
+
+Open the connection by calling the open method
+
+```
+$Connection.Open() 
+```
+
+Building a SQL Query - Can be any CRUD operation - Inserting SQL Code here
+ 
+Creating a table
+
+```
+$sql = @"       
+CREATE TABLE Shane(
+  age tinyint,
+  gender char(1),
+  first_name varchar(15),
+  last_name varchar(15),
+  car varchar(15),
+  profession varchar(25),
+  school char(3)
+);
+"@
+```
+
+Creating an insert statement
+
+```
+$sql = @"
+INSERT INTO Shane (age, gender, first_name, last_name, car, profession, school) 
+VALUES (25, 'M', 'Shane', 'Hartley', 'Ford', 'Information Technology', 'FAU');
+"@
+```
+
+Create a new object representing the SQL Query
+
+```
+$Cmd = New-Object System.Data.SqlClient.SqlCommand 
+```
+
+Set the Connection property of your command to be your Connection object created earlier
+
+```
+$Cmd.Connection = $Connection 
+```
+
+Set the command text to be your SQL Query
+
+```
+$Cmd.CommandText = $sql 
+```
+
+Execute the SQL Query by calling the Execute method
+
+```
+$Cmd.ExecuteNonQuery() | Out-Null
+```
+
+Close the connection
+
+```
+$Connection.Close()
+```
