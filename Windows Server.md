@@ -168,6 +168,12 @@ Adding users created in the Shane OU to the Shane SG
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
 ```
 
+Sync changes to Azure
+
+```
+Start-ADSyncSyncCycle -PolicyType Delta
+```
+
 17. Configuring DNS
 
 Add DNS Forwarder to 8.8.8.8 - Anything non-resolvable by local DNS server 'ShaneServer' uses Firewalls WAN interface to reach Googles Public DNS 
