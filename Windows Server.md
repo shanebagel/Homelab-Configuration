@@ -116,6 +116,8 @@ Set-TimeZone -Name "Eastern Standard Time"
 
 16. Creating OU, Users, and Groups
 
+Creating OUs
+
 ```
 New-ADOrganizationalUnit -Name "Shane Users"
 New-ADOrganizationalUnit -Name "Shane Computers"
@@ -140,13 +142,13 @@ New-ADUser -UserPrincipalName "Shane@shane.local" -Path $users.DistinguishedName
 Admin User Account
 
 ```
-New-ADUser -UserPrincipalName "ShaneAdmin@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "ShaneAdmin"
+New-ADUser -UserPrincipalName "Admin@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Admin -Enabled $True -AccountPassword ($secpass) -SamAccountName "Admin"
 ```
 
 Service Account
 
 ```
-New-ADServiceAccount -Path $users.DistinguishedName -Name "ShaneService" -DNSHostName ShaneServer.shane.local
+New-ADServiceAccount -Path $users.DistinguishedName -Name "Service" -DNSHostName ShaneServer.shane.local 
 ```
 
 Creating Security Group ShaneSG
@@ -158,8 +160,9 @@ New-ADGroup -Name "ShaneSG" -SamAccountName ShaneSG -GroupCategory Security -Gro
 Adding admin user to default SGs 
 
 ```
-Add-ADGroupMember -Identity "Domain Admins" -Members "ShaneAdmin"
-Add-ADGroupMember -Identity "Server Operators" -Members "ShaneAdmin"
+Add-ADGroupMember -Identity "Enterprise Admins" -Members "Admin"
+Add-ADGroupMember -Identity "Domain Admins" -Members "Admin"
+Add-ADGroupMember -Identity "Server Operators" -Members "Admin"
 ```
 
 Adding users created in the Shane OU to the Shane SG
@@ -171,7 +174,7 @@ Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-
 Sync changes to Azure
 
 ```
-Start-ADSyncSyncCycle -PolicyType Delta
+Start-ADSyncSyncCycle -PolicyType Initial
 ```
 
 17. Configuring DNS
