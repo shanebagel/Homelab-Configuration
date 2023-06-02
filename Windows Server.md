@@ -157,6 +157,15 @@ Creating Security Group ShaneSG
 New-ADGroup -Name "ShaneSG" -SamAccountName ShaneSG -GroupCategory Security -GroupScope Global -DisplayName "ShaneSG" -Path $users.DistinguishedName
 ```
 
+Set UPN Suffix to Domain and Set Primary UPNs
+
+```
+Get-ADForest | Set-ADForest -UPNSuffixes @{add="Shane-Hartley.com"}
+Get-ADUser -Identity "Shane" | Set-ADUser -UserPrincipalName "Shane@Shane-Hartley.com"
+Get-ADUser -Identity "Admin" | Set-ADUser -UserPrincipalName "Admin@Shane-Hartley.com"
+Get-ADUser -Identity "ShaneService" | Set-ADUser -UserPrincipalName "ShaneService@Shane-Hartley.com"
+```
+
 Adding admin user to default SGs 
 
 ```
