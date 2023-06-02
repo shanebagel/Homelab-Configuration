@@ -5,27 +5,24 @@ Domain: Shane.local
 Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
 # Things to do…
-Things to do…
+>Update Network Diagram to Include Internal/External Adapters
 
->Windows - Setup SQL Server 
+>pfSense - Add More Rules, Setup VPN
 
->Windows - Setup RRAS Server 
+>Windows - Setup ADCS
 
->Windows - Setup RDS Server 
+>Windows - Setup ADFS
 
->Windows - Setup ADCS 
+>Windows - Setup RRAS Server
 
->Windows - Setup ADFS 
+>Windows - Setup RDS Server
 
->Windows - Setup NPS Server 
+>Windows - Setup NPS Server
 
->Windows - Setup IIS Server 
+>Windows - Setup IIS Server
 
->Update Network Diagram to Include Internal/External Adapters 
+>Veeam - Backups
 
->pfSense - Add More Rules, Setup VPN 
-
->Veeam - Backups 
 
 # VMs:
 
