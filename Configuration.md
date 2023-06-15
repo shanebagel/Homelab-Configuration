@@ -5,23 +5,23 @@
 >Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
 Things to do this week…
-Post updated setup on GitHub
+Post updated setup on GitHub<br>
 
 Things to do…
-Add NS records
-Add detail to user accounts
-Split FMSO roles up between DC1 and DC2
-Setup WSUS to use SQL
-Windows - Setup RRAS
-Windows - Setup RDS
-Windows - Setup ADCS
-Windows - Setup ADFS
-Windows - Setup NPS
-Windows - Setup IIS
-Windows - Setup WDS
-pfSense - Add More Rules, Setup VPN
-Veeam - Backups
-Start building things in Azure using PowerShell 
+Add NS records<br>
+Add detail to user accounts<br>
+Split FMSO roles up between DC1 and DC2<br>
+Setup WSUS to use SQL<br>
+Windows - Setup RRAS<br>
+Windows - Setup RDS<br>
+Windows - Setup ADCS<br>
+Windows - Setup ADFS<br>
+Windows - Setup NPS<br>
+Windows - Setup IIS<br>
+Windows - Setup WDS<br>
+pfSense - Add More Rules, Setup VPN<br>
+Veeam - Backups<br>
+Start building things in Azure using PowerShell<br>
 
 # VMs:
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/96c4b1bf-e276-400a-a985-b35732ac00ab)
