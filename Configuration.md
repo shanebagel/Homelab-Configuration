@@ -1,48 +1,41 @@
 # Hyper-V Homelab Network Configuration:
 
-Domain: Shane.local
+>Domain: smhcomputers.com
 
-Firewalls must be disabled in guest OS of VMs or networking will not work properly
+>Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
-# Things to do…
->Update Network Diagram to Include Internal/External Adapters
+Things to do this week…
+Post updated setup on GitHub
 
->pfSense - Add More Rules, Setup VPN
-
->Windows - Setup ADCS
-
->Windows - Setup ADFS
-
->Windows - Setup RRAS Server
-
->Windows - Setup RDS Server
-
->Windows - Setup NPS Server
-
->Windows - Setup IIS Server
-
->Veeam - Backups
-
+Things to do…
+Add NS records
+Add detail to user accounts
+Split FMSO roles up between DC1 and DC2
+Setup WSUS to use SQL
+Windows - Setup RRAS
+Windows - Setup RDS
+Windows - Setup ADCS
+Windows - Setup ADFS
+Windows - Setup NPS
+Windows - Setup IIS
+Windows - Setup WDS
+pfSense - Add More Rules, Setup VPN
+Veeam - Backups
+Start building things in Azure using PowerShell 
 
 # VMs:
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/96c4b1bf-e276-400a-a985-b35732ac00ab)
 
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/c294daf4-1c0e-419d-a8bb-0634f264b052)
 
-# Host:
+# VM Specifications:
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/35980032-8b28-4fd9-bad3-ea9d6781d1a7)
 
-Both Hyper-V Switches use Wireless Network Adapter
-
-Internal Switch is for internal LAN communication: All Addresses are Static in Guest OS, One Internal Adapter per VM
-
-External Switch is for external WAN communication: Address can fluctuate and is set via DHCP
-
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/276cfcec-1aad-4ace-bd84-2101923cf127)
 
 # Azure AD Connect:
 
-Azure AD Connect is running on ShaneServer
+>Azure AD Connect is running on ShaneServer
 
-Credentials: ShaneAdmin@Shane-Hartley.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
+>Credentials: Sync@smhomputers.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
 
 # Network Diagram:
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/80ac2376-4e2e-4d71-a982-ad7b6be4202a)
+![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/2f3598d4-55b7-416e-a3b8-c5ac7a4d794a)
