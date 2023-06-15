@@ -1,78 +1,63 @@
 # Windows Server 1:
 
-1. Set DNS to Loopback Address
-
+1. Set primary DNS to Loopback Address and secondary DNS to pfSense
 ```
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1"
+Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses "127.0.0.1,192.168.1.1"
 ```
 
-2. Set Static IP, and Gateway IP to ShaneFirewall
-
+3. Set Static IP, and Gateway IP to ShaneFirewall
 ```
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.1.100 -PrefixLength "24" -DefaultGateway 192.168.1.1
 ```
 
-3. Disable Firewall
-
+4. Disable Firewall
 ```
 Set-NetFirewallProfile -Enabled False
 ```
 
-4. Disable IPv6
-
+5. Disable IPv6
 ```
 Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 ```
 
-5. Setting Hostname
-
+6. Setting Hostname
 ```
 Rename-Computer -NewName "ShaneServer"
 Restart-Computer
 ```
 
-6. Update PowerShell Help
-
+7. Setting Time Zone
 ```
-Update-Help
+Set-TimeZone -Name "Eastern Standard Time"
 ```
 
-7. Install ADDS and Management tools
-
+8. Install ADDS and Management tools
 ```
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
 ```
 
-8. Test the configuration before installing the forest
-
+9. Test the configuration before installing the forest
 ```
-Test-ADDSForestInstallation -DomainName shane.local -InstallDns
-```
-
-9. Creating a new AD Forest with domain name Shane.local
-
-```
-Install-ADDSForest -DomainName shane.local -InstallDNS
+Test-ADDSForestInstallation -DomainName ad.smhcomputers.com -InstallDns
 ```
 
-10. After reboot, check that AD is installed and Domain is configured
+10. Creating a new AD Forest with domain name ad.smhcomputers.com
+```
+Install-ADDSForest -DomainName ad.smhcomputers.com -InstallDNS
+```
 
+11. After reboot, check that AD is installed and Domain is configured
 ```
 Get-ADDomainController
 ```
 
-11. Install PowerShell Version 7
-
+12. Install PowerShell Version 7
 ```
 Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
 ```
 
-12. Install NuGet Package manager, prerequisite for installing modules
-
+13. Creating a list of modules
 ```
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-
-
 $Modules = @( 
 "Az", 
 "AzureAD", 
@@ -83,17 +68,19 @@ $Modules = @(
 "Microsoft.Graph", 
 "MSOnline" 
 )
-
 ```
 
-13. Installing Modules
-
+14. Installing Modules
 ```
 Install-Module -Name $Modules -Force
 ```
 
-14. Disable IE Enhanced Security 
+15. Update PowerShell Help
+```
+Update-Help
+```
 
+16. Disable IE Enhanced Security 
 ```
 function Disable-InternetExplorerESC {
       $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
@@ -108,66 +95,48 @@ function Disable-InternetExplorerESC {
 Disable-InternetExplorerEsc
 ```
 
-15. Setting Time Zone
+17. Creating OU, Users, and Groups
 
-```
-Set-TimeZone -Name "Eastern Standard Time"
-```
-
-16. Creating OU, Users, and Groups
-
-Creating OUs
 
 ```
 New-ADOrganizationalUnit -Name "Shane Users"
 New-ADOrganizationalUnit -Name "Shane Computers"
 $users = Get-ADOrganizationalUnit -LDAPFilter '(name=Shane Users)'
-$users.DistinguishedName
 ```
 
 Setting passwords for accounts
-
 ```
 $secpass = Read-Host "Set password for accounts" -AsSecureString
 ```
 
-Creating accounts
-
 Regular User Account
 
 ```
-New-ADUser -UserPrincipalName "Shane@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "Shane"
+New-ADUser -UserPrincipalName "Shane@smhcomputers.com" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Shane Hartley" -Enabled $True -AccountPassword ($secpass) -SamAccountName "Shane"
 ```
 
 Admin User Account
-
 ```
-New-ADUser -UserPrincipalName "Admin@shane.local" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Admin -Enabled $True -AccountPassword ($secpass) -SamAccountName "Admin"
+New-ADUser -UserPrincipalName "Admin@smhcomputers.com" -Path $users.DistinguishedName -PasswordNeverExpires $True -Name "Admin" -Enabled $True -AccountPassword ($secpass) -SamAccountName "Admin"
+```
+
+Create Root Key for Service Account
+```
+Add-KdsRootKey –EffectiveTime ((get-date).addhours(-10))
 ```
 
 Service Account
 
 ```
-New-ADServiceAccount -Path $users.DistinguishedName -Name "Service" -DNSHostName ShaneServer.shane.local 
+New-ADServiceAccount -Path $users.DistinguishedName -Name "Service" -DNSHostName ad.smhcomputers.com
 ```
 
 Creating Security Group ShaneSG
-
 ```
 New-ADGroup -Name "ShaneSG" -SamAccountName ShaneSG -GroupCategory Security -GroupScope Global -DisplayName "ShaneSG" -Path $users.DistinguishedName
 ```
 
-Set UPN Suffix to Domain and Set Primary UPNs
-
-```
-Get-ADForest | Set-ADForest -UPNSuffixes @{add="Shane-Hartley.com"}
-Get-ADUser -Identity "Shane" | Set-ADUser -UserPrincipalName "Shane@Shane-Hartley.com"
-Get-ADUser -Identity "Admin" | Set-ADUser -UserPrincipalName "Admin@Shane-Hartley.com"
-Get-ADUser -Identity "ShaneService" | Set-ADUser -UserPrincipalName "ShaneService@Shane-Hartley.com"
-```
-
-Adding admin user to default SGs 
-
+Adding admin user to default administrative SGs 
 ```
 Add-ADGroupMember -Identity "Enterprise Admins" -Members "Admin"
 Add-ADGroupMember -Identity "Domain Admins" -Members "Admin"
@@ -175,105 +144,86 @@ Add-ADGroupMember -Identity "Server Operators" -Members "Admin"
 ```
 
 Adding users created in the Shane OU to the Shane SG
-
 ```
 Get-ADUser -filter * -searchbase $users.DistinguishedName | ForEach-Object {Add-AdGroupMember -Identity shaneSG -members $_.SamAccountName}
 ```
 
 Sync changes to Azure
-
 ```
 Start-ADSyncSyncCycle -PolicyType Initial
 ```
 
 17. Configuring DNS
 
-Add DNS Forwarder to 8.8.8.8 - Anything non-resolvable by local DNS server 'ShaneServer' uses Firewalls WAN interface to reach Googles Public DNS 
-
 ```
+Add DNS Forwarder to 8.8.8.8 - Anything non-resolvable by local DNS server 'ShaneServer' uses Firewalls WAN interface to reach Googles Public DNS 
 Add-DNSServerForwarder 8.8.8.8 -PassThru; Get-DNSServerForwarder
 ```
 
 Add Forward Lookup Zone
-
 ```
-Add-DNSServerPrimaryZone -Name "shane.local" -ComputerName "ShaneServer" -ReplicationScope "Domain" -PassThru
-Get-DNSServerZone -ZoneName "Shane.local"
+Add-DNSServerPrimaryZone -Name "ad.smhcomputers.com" -ComputerName "ShaneServer" -ReplicationScope "Domain" -PassThru
+Get-DNSServerZone -ZoneName "ad.smhcomputers.com"
 ```
 
 Add Reverse Lookup Zone
-
 ```
 Add-DNSServerPrimaryZone -NetworkID "192.168.1/24" -ComputerName "Shaneserver" -ReplicationScope "Domain" -PassThru
 Get-DNSServerZone -ZoneName "1.168.192.in-addr.arpa"
 ```
 
 Add A Records
-
 ```
-Add-DNSServerResourceRecordA -Name "Shaneserver" -ZoneName "Shane.local" -IPv4Address "192.168.1.100" -ComputerName "ShaneServer"
-Add-DNSServerResourceRecordA -Name "Shaneserver2" -ZoneName "Shane.local" -IPv4Address "192.168.1.101" -ComputerName "ShaneServer"
-Add-DNSServerResourceRecordA -Name "Shaneclient" -ZoneName "Shane.local" -IPv4Address "192.168.1.102" -ComputerName "ShaneServer"
-Add-DNSServerResourceRecordA -Name "Shanelinux" -ZoneName "Shane.local" -IPv4Address "192.168.1.103" -ComputerName "ShaneServer"
-Add-DNSServerResourceRecordA -Name "Shanenas" -ZoneName "Shane.local" -IPv4Address "192.168.1.104" -ComputerName "ShaneServer"
-Add-DNSServerResourceRecordA -Name "Shanefirewall" -ZoneName "Shane.local" -IPv4Address "192.168.1.105" -ComputerName "ShaneServer"
+Add-DNSServerResourceRecordA -Name "Shanefirewall" -ZoneName "ad.smhcomputers.com" -IPv4Address "192.168.1.1" -ComputerName "ShaneServer"
+Add-DNSServerResourceRecordA -Name "Shaneserver" -ZoneName "ad.smhcomputers.com" -IPv4Address "192.168.1.100" -ComputerName "ShaneServer"
+Add-DNSServerResourceRecordA -Name "Shaneserver2" -ZoneName "ad.smhcomputers.com" -IPv4Address "192.168.1.101" -ComputerName "ShaneServer"
+Add-DNSServerResourceRecordA -Name "Shaneclient" -ZoneName "ad.smhcomputers.com" -IPv4Address "192.168.1.102" -ComputerName "ShaneServer"
 ```
 
 Add PTR Records
-
 ```
-Add-DNSServerResourceRecordPtr -Name '100' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'Shaneserver.shane.local' -ComputerName "shaneserver"
-Add-DNSServerResourceRecordPtr -Name '101' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneserver2.shane.local' -ComputerName "shaneserver"
-Add-DNSServerResourceRecordPtr -Name '102' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneclient.shane.local' -ComputerName "shaneserver"
-Add-DNSServerResourceRecordPtr -Name '103' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanelinux.shane.local' -ComputerName "shaneserver"
-Add-DNSServerResourceRecordPtr -Name '104' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanenas.shane.local' -ComputerName "shaneserver"
-Add-DNSServerResourceRecordPtr -Name '105' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanefirewall.shane.local' -ComputerName "shaneserver"
+Add-DNSServerResourceRecordPtr -Name '1' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shanefirewall.smhcomputers.com' -ComputerName "shaneserver"
+Add-DNSServerResourceRecordPtr -Name '100' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'Shaneserver.ad.smhcomputers.com' -ComputerName "shaneserver"
+Add-DNSServerResourceRecordPtr -Name '101' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneserver2.ad.smhcomputers.com' -ComputerName "shaneserver"
+Add-DNSServerResourceRecordPtr -Name '102' -ZoneName '1.168.192.in-addr.arpa' -PtrDomainName 'shaneclient.ad.smhcomputers.com' -ComputerName "shaneserver"
 ```
 
 Confirm DNS Records 
-
 ```
-Get-DNSServerResourceRecord -ZoneName "shane.local" -ComputerName "shaneserver"
+Get-DNSServerResourceRecord -ZoneName "ad.smhcomputers.com" -ComputerName "shaneserver"
 ```
 
 18. Installation and Configuration of DHCP
-
 ```
 Install-WindowsFeature -Name dhcp -IncludeManagementTools
 ```
 
 Enable DHCP to communicate with AD
-
 ```
-Add-DHCPServerInDC -DnsName ShaneServer.shane.local
+Add-DHCPServerInDC -DnsName ShaneServer.ad.smhcomputers.com
 ```
 
 Add a DHCP scope - .100 to .125
-
 ```
 Add-DhcpServerv4Scope -Name "ShaneScope" -StartRange 192.168.1.100 -EndRange 192.168.1.125 -SubnetMask 255.255.255.0
 ```
 
 Add Reservation to DHCP scope for ShaneClient - 192.168.1.102
-
 ```
-Add-DhcpServerv4Reservation -Name "ShaneReservation" -ScopeId 192.168.1.0 -IPAddress 192.168.1.102 -ClientID "<ShaneClientMAC>" -Description "Reserved IP Address for ShaneClient"
+Add-DhcpServerv4Reservation -Name "ShaneReservation" -ScopeId 192.168.1.0 -IPAddress 192.168.1.102 -ClientID "00155D010161" -Description "Reserved IP Address for ShaneClient"
 ```
 
 Add Gateway, Domain Name & DNS Server to DHCP Scope
-
 ```
-Set-DhcpServerv4OptionValue -ComputerName "shaneserver.shane.local" -ScopeId 192.168.1.0 -DnsServer 192.168.1.100 -DnsDomain "shane.local" -Router 192.168.1.1
+Set-DhcpServerv4OptionValue -ComputerName "shaneserver.ad.smhcomputers.com" -ScopeId 192.168.1.0 -DnsServer 192.168.1.100 -DnsDomain "ad.smhcomputers.com" -Router 192.168.1.1
 ```
 
 Reboot Server after DHCP Configuration 
-
 ```
 Restart-Computer
 ```
 
 19. Creating GPOs
-
 ```
 New-GPO -Name "Disable Control Panel"
 New-GPO -Name "Disable Command Prompt"
@@ -282,221 +232,24 @@ New-GPO -Name "Mapped HP Printer"
 ```
 
 Configuring GPOs 
-
 ```
 Set-GPRegistryValue -Name "Disable Control Panel" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" -ValueName "NoControlPanel" -Value 1 -Type DWORD
 Set-GPRegistryValue -Name "Disable Command Prompt" -Key "HKCU\Software\Policies\Microsoft\Windows\System" -ValueName "DisableCMD" -Value 1 -Type DWORD
 ```
 
 Manually Create GPOs for Printer/Drive Maps
-
 >User Configuration\Preferences\Control Panel Settings\Printers\Shared Printer (Name: \\shaneserver2\HP Printer)
-
 >User Configuration\Preferences\Windows Settings\Drive Maps\Drive Map (Drive: S \\shaneserver2\ShaneShare)
 
 Applying the GPO to OU "Shane Users" which contains the Client PC
-
 ```
-Get-GPO -Name "Disable Control Panel" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
-Get-GPO -Name "Disable Command Prompt" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
-Get-GPO -Name "Mapped Drive" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
-Get-GPO -Name "Mapped HP Printer" | New-GPLink -Target "OU=Shane Users,DC=shane,DC=local"
+Get-GPO -Name "Disable Control Panel" | New-GPLink -Target "OU=Shane Users,DC=ad,DC=smhcomputers,DC=com"
+Get-GPO -Name "Disable Command Prompt" | New-GPLink -Target "OU=Shane Users,DC=ad,DC=smhcomputers,DC=com"
+Get-GPO -Name "Mapped Drive" | New-GPLink -Target "OU=Shane Users,DC=ad,DC=smhcomputers,DC=com"
+Get-GPO -Name "Mapped HP Printer" | New-GPLink -Target "OU=Shane Users,DC=ad,DC=smhcomputers,DC=com"
 ```
 
 Confirm all GPOs are applying to OU
-
 ```
-$gpos = Get-GPInheritance -Target "OU=Shane Users,DC=shane,DC=local"; $gpos.GpoLinks | Format-Table 
-```
-
-20. WSUS Installation and Configuration - Local Windows Database
-
-```
-Install-WindowsFeature -Name UpdateServices, UpdateServices-Ui , UpdateServices-WidDB -IncludeManagementTools
-```
-
-Set Database to WSUS Directory 
-
-```
-Set-Location "C:\Program Files\Update Services\Tools"
-.\WsusUtil.exe PostInstall CONTENT_DIR=C:\WSUS
-```
-
-Connect to local Windows WSUS Database
-
-```
-[void][reflection.assembly]::LoadWithPartialName(“Microsoft.UpdateServices.Administration”)
-$wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::getUpdateServer('shaneserver',$False,8530)
-```
-
-Add "Shane WSUS Production Computers" Group
-
-Configuring GPO to point computers at WSUS server
->Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Configure Automatic Updates
-
->Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Specify intranet Microsoft update service location
-
-Enable both policies - Set the WSUS Server that clients will use for updates via GPO
->http://ShaneServer.shane.local:8530
-
->Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Synchronizations per day: 1
-
->Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
-
-Add Client Computers to WSUS Computer Group
-
-```
-Get-WsusComputer | Add-WsusComputer -TargetGroupName "Shane WSUS Production Computers"
-```
-
-Configure Synchronization Source to be Microsoft Update
-
-```
-Set-WsusServerSynchronization -SyncFromMU
-```
-
-Start WSUS and Windows Update Services
-
-```
-Get-Service -Name "WsusService" | Start-Service
-Get-Service -Name "Wuauserv" | Start-Service
-```
-
-Start Update Synchronization 
-
-```
-(Get-WsusServer).GetSubscription().StartSynchronization()
-```
-
-Approve Critical Updates for Production Computers Manually
-
-```
-Get-WsusUpdate | Where-object {$_.Classification -like "Critical Updates"} | Approve-WsusUpdate -Action Install -TargetGroupName "Shane WSUS Production Computers"
-```
-
-21. Installation and Configuration of SQL Server PowerShell Module
-
-```
-Install-Module SQLServer 
-```
-
-Installation of dbatools
-
-```
-Install-Module dbatools 
-```
-
-Setting path for SQL Installation and downloading installer files
-
-```
-Set-Location C:\
-New-Item -Type Directory -Name "SQL"
-Set-Location C:\SQL
-$ProgressPreference= 'SilentlyContinue'
-
-$url = "https://aka.ms/ssmsfullsetup"
-$path = "C:\SQL\﻿﻿SSMS-Setup-ENU.exe"
-Invoke-WebRequest -Uri $url -OutFile $path -UseBasicParsing
-
-$url2 = "https://go.microsoft.com/fwlink/p/?linkid=2216019&clcid=0x409&culture=en-us&country=us"
-$path2 = "C:\SQL\SQLServer.exe"
-Invoke-WebRequest -Uri $url2 -OutFile $path2 -UseBasicParsing
-```
-
-Installation of SQL Server Express and SSMS
-
-```
-Start-Process -Wait -FilePath ".\﻿﻿SSMS-Setup-ENU.exe" -ArgumentList "/S /v/qn" -PassThru
-Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassThru
-```
-
->Instance Name: SQLEXPRESS<br>
->Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;<br>
->Server Instance: SHANESERVER\SQLEXPRESS<br>
-
->Set sa password<br>
->Enable sa login<br>
->Set SQL Server and Windows Authentication mode in SSMS<br>
->Restart SSMS<br>
->Restart SQL Server Service<br>
-
-Set your Connection String for your SQL Server Database
-
-```
-$DiskInfoSqlConnection = "Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;TrustServerCertificate=true;Encrypt=False;User Id=SHANE\administrator;Password=Booferino69" 
-```
-
-Create a new object representing the connection to your SQL Server
-
-```
-$Connection = New-Object System.Data.SqlClient.SqlConnection 
-```
-
-Set the ConnectionString property to the databases Connection String
-
-```
-$Connection.ConnectionString = $DiskInfoSqlConnection 
-```
-
-Open the connection by calling the open method
-
-```
-$Connection.Open() 
-```
-
-Building a SQL Query - Can be any CRUD operation - Inserting SQL Code here
- 
-Creating a table
-
-```
-$sql = @"       
-CREATE TABLE Shane(
-  age tinyint,
-  gender char(1),
-  first_name varchar(15),
-  last_name varchar(15),
-  car varchar(15),
-  profession varchar(25),
-  school char(3)
-);
-"@
-```
-
-Creating an insert statement
-
-```
-$sql = @"
-INSERT INTO Shane (age, gender, first_name, last_name, car, profession, school) 
-VALUES (25, 'M', 'Shane', 'Hartley', 'Ford', 'Information Technology', 'FAU');
-"@
-```
-
-Create a new object representing the SQL Query
-
-```
-$Cmd = New-Object System.Data.SqlClient.SqlCommand 
-```
-
-Set the Connection property of your command to be your Connection object created earlier
-
-```
-$Cmd.Connection = $Connection 
-```
-
-Set the command text to be your SQL Query
-
-```
-$Cmd.CommandText = $sql 
-```
-
-Execute the SQL Query by calling the Execute method
-
-```
-$Cmd.ExecuteNonQuery() | Out-Null
-```
-
-Close the connection
-
-```
-$Connection.Close()
+$gpos = Get-GPInheritance -Target "OU=Shane Users,DC=shane,DC=local"; $gpos.GpoLinks | Format-Table
 ```
