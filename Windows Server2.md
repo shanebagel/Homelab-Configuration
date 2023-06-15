@@ -200,11 +200,15 @@ Start-Process -Wait -FilePath ".\SQLServer.exe" -ArgumentList "/S /v/qn" -PassTh
 ```
 
 >Instance Name: SQLEXPRESS
+
 >Connection String: Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
+
 >Server Instance: SHANESERVER2\SQLEXPRESS
-<br>
+
 >Set sa password
+
 >Enable sa login
+
 >Set SQL Server and Windows Authentication mode in SSMS under 'Security'
 
 Restart SQL Server Service
@@ -303,13 +307,18 @@ $wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::getUpdateServer('s
 
 Configuring GPO to point computers at WSUS server
 >Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Configure Automatic Updates
+
 >Computer Configuration\Policies\Administrative Templates\Windows Components\Windows Update\Specify intranet Microsoft update service location
 <br>
+
 Enable both policies - Set the WSUS Server that clients will use for updates via GPO
+
 >Set the intranet update service for detecting updates: http://ShaneServer2.ad.smhcomputers.com:8530
+
 >Set the intranet statistics server: http://ShaneServer2.ad.smhcomputers.com:8530
-<br>
+
 >Set Automatic Synchronization Schedule - First Synchronization: 12:00:00 am, Synchronizations per day: 1
+
 >Set Automatic Approvals - New Rule: When an update is in a specific classification: Critical Updates
 
 Add Client Computers to WSUS Computer Group
