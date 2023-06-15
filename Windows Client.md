@@ -1,81 +1,49 @@
 # Windows Client:
 
-1. Set Adapter to use DHCP  
-
+1. Set Adapter to use DHCP
 ```
 Set-NetIPInterface -InterfaceAlias 'Ethernet' -Dhcp Enabled
 ```
 
-2. Release and Renew IP to get DHCP Address
-
+3. Release and Renew IP to get DHCP Address
 ```
 Ipconfig /release
 Ipconfig /renew
 ```
 
-3. Disable firewall
-
+4. Disable firewall
 ```
 Set-NetFirewallProfile -Enabled False
 ```
 
-4. Disable IPv6
-
+5. Disable IPv6
 ```
 Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 ```
 
-5. Setting Hostname
-
+6. Setting Hostname
 ```
 Rename-Computer -NewName "ShaneClient"
 Restart-Computer
 ```
 
-6. Update PowerShell Help
-
-```
-Update-Help
-```
-
 7. Install PowerShell Version 7
-
 ```
 Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -useMSI -Quiet -EnablePSRemoting"
 ```
 
-8. Install NuGet Package manager, prerequisite for installing modules
-
+8. Update PowerShell Help
 ```
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-
-$Modules = @( 
-"Az", 
-"AzureAD", 
-"MicrosoftTeams", 
-"ExchangeOnlineManagement", 
-"Microsoft.Online.SharePoint.PowerShell", 
-"SharePointPnPPowerShellOnline", 
-"Microsoft.Graph", 
-"MSOnline" 
-)
+Update-Help
 ```
 
-9. Installing Modules
-
-```
-Install-Module -Name $Modules -Force
-```
-
-10. Setting Time Zone
-
+9. Setting Time Zone
 ```
 Set-TimeZone -Name "Eastern Standard Time"
 ```
 
-11. Join the Client to the Domain 
-
+10. Join the Client to the Domain 
 ```
-Add-Computer -DomainCredential administrator -Server "Shaneserver" -DomainName "Shane.local"
+Add-Computer -DomainCredential admin -Server "Shaneserver" -DomainName "ad.smhcomputers.com"
 Restart-Computer
 ```
