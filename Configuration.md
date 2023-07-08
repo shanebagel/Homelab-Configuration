@@ -4,9 +4,6 @@
 
 >Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
-Things to do this week…<br>
-Post updated setup on GitHub<br>
-
 Things to do…
 Veeam - Backups<br>
 Start building things in Azure using PowerShell<br>
