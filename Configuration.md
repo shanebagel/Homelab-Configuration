@@ -8,18 +8,6 @@ Things to do this week…<br>
 Post updated setup on GitHub<br>
 
 Things to do…
-Add NS records<br>
-Add detail to user accounts<br>
-Split FMSO roles up between DC1 and DC2<br>
-Setup WSUS to use SQL<br>
-Windows - Setup RRAS<br>
-Windows - Setup RDS<br>
-Windows - Setup ADCS<br>
-Windows - Setup ADFS<br>
-Windows - Setup NPS<br>
-Windows - Setup IIS<br>
-Windows - Setup WDS<br>
-pfSense - Add More Rules, Setup VPN<br>
 Veeam - Backups<br>
 Start building things in Azure using PowerShell<br>
 
