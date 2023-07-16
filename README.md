@@ -22,7 +22,7 @@ Start building things in Azure using PowerShell<br>
 
 >Azure AD Connect is running on ShaneServer
 
->Credentials: Sync@smhomputers.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
+>Credentials: Sync@smhcomputers.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
 
 # Network Diagram:
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/f1198526-8ad0-460c-86d9-43e4f059f63a)
