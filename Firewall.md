@@ -15,7 +15,7 @@ Web Interface for pfSense Firewall
 
 7. Hostname: ShaneFirewall
 
-8. Domain: smhomputers.com
+8. Domain: smhcomputers.com
 
 9. Primary DNS Server: 8.8.8.8 (Google Public DNS) 
 
