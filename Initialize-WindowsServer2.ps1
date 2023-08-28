@@ -194,12 +194,15 @@ $Cmd.ExecuteNonQuery() | Out-Null
 # Close the connection
 $Connection.Close() 
 
-# 17. WSUS Installation and Configuration - Local Windows Database
-Install-WindowsFeature -Name UpdateServices, UpdateServices-Ui , UpdateServices-WidDB -IncludeManagementTools
+# 17. WSUS Installation and Configuration - SQL Express
+Install-WindowsFeature -Name UpdateServices-Services,UpdateServices-DB -IncludeManagementTools
+
+$SQLInstance = "Shaneserver2\Sqlexpress"
+$WSUSDir = "C:\WSUS"
 
 # Set Database to WSUS Directory 
 Set-Location "C:\Program Files\Update Services\Tools"
-.\WsusUtil.exe PostInstall CONTENT_DIR=C:\WSUS
+.\WsusUtil.exe PostInstall SQL_INSTANCE_NAME=$SQLInstance CONTENT_DIR=$WSUSDir
 
 # Connect to WSUS Database
 [void][reflection.assembly]::LoadWithPartialName(“Microsoft.UpdateServices.Administration”)
