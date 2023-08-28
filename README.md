@@ -6,9 +6,6 @@ Windows Homelab Environment - Contains all lab configurations including Host, Cl
 
 >Firewalls must be disabled in guest OS of VMs or networking will not work properly
 
-Things to do…<br>
-Start building things in Azure using PowerShell<br>
-
 # VMs:
 ![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/96c4b1bf-e276-400a-a985-b35732ac00ab)
 
