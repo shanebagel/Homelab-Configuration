@@ -1,29 +1,17 @@
 # Hyper-V Homelab Configuration:
 
-Windows Homelab Environment - Contains all lab configurations including Host, Client, Servers, and Firewall
+Domain: AD.SMHCOMPUTERS.COM
 
->Domain: smhcomputers.com
+Internal Adapter: Internal DNS Resolution - Static - Priority on WB/DC/Client
 
->Firewalls must be disabled in guest OS of VMs or networking will not work properly
+External Adapter: External DNS Resolution - DHCP - Priority on DC
+
+Default Gateway: 10.0.0.1 - IP of Internal Switch
 
 # VMs:
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/96c4b1bf-e276-400a-a985-b35732ac00ab)
 
+![Alt text](image.png)
 
 # VM Specifications:
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/35980032-8b28-4fd9-bad3-ea9d6781d1a7)
 
-# Azure Tenant:
-
->Azure AD Connect is running on ShaneServer
-
->Credentials: Sync@smhcomputers.com - Tenant ID: 2b0884e8-3366-4d15-9fb6-1971df9f4fc0
-
-# Office 365 Tenant:
-
->Licensing: Business Basic - Grants access to Exchange, SharePoint, Teams, and OneDrive Tenants
-
->Credentials: Shane@smhcomputers.com - Tenant ID: Same as Azure Tenant
-
-# Network Diagram:
-![image](https://github.com/shanebagel/Homelab-Configuration/assets/99091402/f1198526-8ad0-460c-86d9-43e4f059f63a)
+![Alt text](image-1.png)
