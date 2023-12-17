@@ -10,8 +10,8 @@ Switch: 10.0.0.254 - IP of Hyper-V Switch (Internal)
 
 VMs:
 
-![Alt text](image.png)
+![Alt text](image-1.png)
 
 VM Specifications:
 
-![Alt text](image-1.png)
+![Alt text](image.png)
