@@ -1,0 +1,78 @@
+Firewall:
+
+Web Interface for pfSense Firewall
+http://10.0.0.1/
+
+1. Connect Hyper-V External Switch
+2. Connect Hyper-V Internal Switch
+3. Assign interfaces hn0 and hn1 to either LAN / WAN according to MAC Address
+4. WAN Interface - External Switch: DHCP
+5. LAN Interface - Internal Switch: Static - IP: 10.0.0.1 - Subnet: 24
+6. On VMs configure Default Gateway as 10.0.0.1
+7. Open web interface at http://10.0.0.1
+8. Hostname: SHANEFW
+9. Domain: AD.SMHCOMPUTERS.COM
+10. Primary DNS Server: 8.8.8.8 (Google Public DNS) 
+11. Check "Allow DNS server list to be overridden by DHCP/PPP on WAN"
+12. Time Server Hostname: time.nist.gov
+13. Timezone: US/Central
+14. Under 'WAN Configuration'
+15. Uncheck "Block private networks from entering via WAN"
+16. Uncheck "Block non-Internet routed networks from entering via WAN"
+17. Verify static IP on LAN interface is set to 10.0.0.1
+18. Set Admin password
+19. Reload 
+20. Under 'System' -> 'General Setup'
+21. DNS Resolution Behavior: "Use local DNS (127.0.0.1), fall back to remote DNS Servers (Default)"
+22. Under 'System' -> 'Advanced' -> 'Admin Access'
+23. Check "HTTPS (SSL/TLS)"
+24. Check "Enable Secure Shell"
+25. SSH key Only: "Require Both Password and Public Key"
+26. Check "Allow Agent Forwarding"
+27. SSH port: 22
+28. Under 'Services' -> 'DHCP Server'
+
+Interfaces:
+WAN = DHCP
+LAN = 10.0.0.1 (Gateway for VMs)
+
+
+Interface Rule Directions:
+Ingress = Incoming Traffic
+Egress = Outgoing Traffic
+Always configure Inbound (Ingress) Rules on WAN Interface
+Always configure Outbound Rules (Egress) Rules on LAN Interface
+OpenVPN <- Inbound (Ingress) Rules 
+
+
+
+Default Firewall Rule:
+Implicit Deny (If interface has no rules - all traffic will be blocked)
+
+Firewall Priorities:
+Rules with the most privileges are at the top
+
+Rules Priorities:
+System Rules
+Floating Rules 
+Interface Rules
+
+Always configure anti-lockout rule as first rule
+Creating port forwarding creates firewall rules automatically
+
+Structure of Firewall Rules:
+Action: Pass/Block/Reject
+Interface: LAN/WAN
+Protocol: Protocol
+Source: Source of Network Traffic
+Destination: Destination of Network Traffic
+
+Rules:
+	1. Remove LAN interface Rule 'Default allow LAN to any rule'
+	2. Remove LAN interface Rule 'Default allow LAN IPv6 to any rule'
+	3. Add LAN interface Rule to Allow Egress ICMP traffic - To permit pinging 
+	4. Add LAN interface Rule to Allow Egress SSH traffic - To permit SSH traffic 
+	5. Add LAN interface Rule to Allow Egress DNS traffic - To permit name resolution
+	6. Add LAN interface Rule to Allow Egress HTTP traffic - To permit egress HTTP traffic
+	7. Add LAN interface Rule to Allow Egress HTTPS traffic - To permit egress HTTPS traffic
+	8. Add LAN interface Rule to Allow Egress DNS over TLS traffic - To permit name resolution

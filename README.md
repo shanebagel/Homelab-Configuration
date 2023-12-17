@@ -2,16 +2,16 @@
 
 Domain: AD.SMHCOMPUTERS.COM
 
-Internal Adapter: Internal DNS Resolution - Static - Priority on WB/DC/Client
+Internal Adapters: Internal DNS Resolution - Static
 
-External Adapter: External DNS Resolution - DHCP - Priority on DC
+Gateway: 10.0.0.1 - IP of pfSense Firewall (Default Gateway)
 
-Default Gateway: 10.0.0.1 - IP of Internal Switch
+Switch: 10.0.0.254 - IP of Hyper-V Switch (Internal)
 
-# VMs:
+VMs:
 
 ![Alt text](image.png)
 
-# VM Specifications:
+VM Specifications:
 
 ![Alt text](image-1.png)
