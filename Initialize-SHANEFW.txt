@@ -27,7 +27,7 @@ http://10.0.0.1/
 22. Under 'System' -> 'Advanced' -> 'Admin Access'
 23. Check "HTTPS (SSL/TLS)"
 24. Check "Enable Secure Shell"
-25. SSH key Only: "Require Both Password and Public Key"
+25. SSHd key Only: "Password or Public Key"
 26. Check "Allow Agent Forwarding"
 27. SSH port: 22
 28. Under 'Services' -> 'DHCP Server'
