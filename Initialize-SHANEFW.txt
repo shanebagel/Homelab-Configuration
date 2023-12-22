@@ -74,5 +74,6 @@ Rules:
 	4. Add LAN interface Rule to Allow Egress SSH traffic - To permit SSH traffic 
 	5. Add LAN interface Rule to Allow Egress DNS traffic - To permit name resolution
 	6. Add LAN interface Rule to Allow Egress HTTP traffic - To permit egress HTTP traffic
+	7. Add LAN interface Rule to Allow Egress NTP traffic - To permit egress NTP traffic
 	7. Add LAN interface Rule to Allow Egress HTTPS traffic - To permit egress HTTPS traffic
 	8. Add LAN interface Rule to Allow Egress DNS over TLS traffic - To permit name resolution
